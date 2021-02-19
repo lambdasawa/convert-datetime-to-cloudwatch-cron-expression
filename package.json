@@ -1,5 +1,5 @@
 {
-  "name": "nextjs",
+  "name": "convert-datetime-to-cloudwatch-cron-expression",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -32,14 +32,7 @@ function convertToCron(dateObject) {
   }
 }
 
-const initialDateObject = {
-  year: "1994",
-  month: "6",
-  day: "14",
-  hour: "3",
-  minute: "1",
-  zone: "Asia/Tokyo",
-};
+const initialDateObject = { ...DateTime.now().toObject(), zone: "Asia/Tokyo" };
 
 function onChange(e, dateObject, key, setDateObject, setResult) {
   const v = { ...dateObject, [key]: e.target.value };

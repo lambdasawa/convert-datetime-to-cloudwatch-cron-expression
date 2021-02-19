@@ -5,17 +5,6 @@ import styles from "../styles/Home.module.css";
 
 function convertToCron(dateObject) {
   try {
-    console.log(
-      DateTime.fromObject({
-        year: parseInt(dateObject.year, 10),
-        month: parseInt(dateObject.month, 10),
-        day: parseInt(dateObject.day, 10),
-        hour: parseInt(dateObject.hour, 10),
-        minute: parseInt(dateObject.minute, 10),
-        zone: dateObject.zone,
-      }).toString()
-    );
-
     return DateTime.fromObject({
       year: parseInt(dateObject.year, 10),
       month: parseInt(dateObject.month, 10),

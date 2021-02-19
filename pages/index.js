@@ -1,65 +1,114 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import { useState } from "react";
+import { DateTime } from "luxon";
+import styles from "../styles/Home.module.css";
+
+function convertToCron(dateObject) {
+  try {
+    console.log(
+      DateTime.fromObject({
+        year: parseInt(dateObject.year, 10),
+        month: parseInt(dateObject.month, 10),
+        day: parseInt(dateObject.day, 10),
+        hour: parseInt(dateObject.hour, 10),
+        minute: parseInt(dateObject.minute, 10),
+        zone: dateObject.zone,
+      }).toString()
+    );
+
+    return DateTime.fromObject({
+      year: parseInt(dateObject.year, 10),
+      month: parseInt(dateObject.month, 10),
+      day: parseInt(dateObject.day, 10),
+      hour: parseInt(dateObject.hour, 10),
+      minute: parseInt(dateObject.minute, 10),
+      zone: dateObject.zone,
+    })
+      .setZone("UTC")
+      .toFormat(`'cron('m H d M ? yyyy')'`);
+  } catch (_e) {
+    console.error(_e);
+    return "Syntax error";
+  }
+}
+
+const initialDateObject = {
+  year: "1994",
+  month: "6",
+  day: "14",
+  hour: "3",
+  minute: "1",
+  zone: "Asia/Tokyo",
+};
+
+function onChange(e, dateObject, key, setDateObject, setResult) {
+  const v = { ...dateObject, [key]: e.target.value };
+  setDateObject(v);
+  setResult(convertToCron(v));
+}
 
 export default function Home() {
+  const [dateObject, setDateObject] = useState(initialDateObject);
+  const [result, setResult] = useState(convertToCron(dateObject));
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>convert-datetime-to-cloudwatch-cron-expression</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+      <div>
+        <input
+          size={4}
+          value={dateObject.year}
+          onChange={(e) =>
+            onChange(e, dateObject, "year", setDateObject, setResult)
+          }
+        ></input>
+        <span>/</span>
+        <input
+          size={2}
+          value={dateObject.month}
+          onChange={(e) =>
+            onChange(e, dateObject, "month", setDateObject, setResult)
+          }
+        ></input>
+        <span>/</span>
+        <input
+          size={2}
+          value={dateObject.day}
+          onChange={(e) =>
+            onChange(e, dateObject, "day", setDateObject, setResult)
+          }
+        ></input>
+        <span> </span>
+        <input
+          size={2}
+          value={dateObject.hour}
+          onChange={(e) =>
+            onChange(e, dateObject, "hour", setDateObject, setResult)
+          }
+        ></input>
+        <span>:</span>
+        <input
+          size={2}
+          value={dateObject.minute}
+          onChange={(e) =>
+            onChange(e, dateObject, "minute", setDateObject, setResult)
+          }
+        ></input>
+        <span> </span>
+        <input
+          size={10}
+          value={dateObject.zone}
+          onChange={(e) =>
+            onChange(e, dateObject, "zone", setDateObject, setResult)
+          }
+        ></input>
+      </div>
+      <div>
+        <pre>{result}</pre>
+      </div>
     </div>
-  )
+  );
 }
